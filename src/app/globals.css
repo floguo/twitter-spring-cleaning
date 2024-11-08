@@ -5,17 +5,42 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #1DA1F2;
+  --primary-hover: #1A91DA;
+  --secondary: #E8F5FE;
+  --accent: #17BF63;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --primary: #1DA1F2;
+    --primary-hover: #1A91DA;
+    --secondary: #192734;
+    --accent: #17BF63;
   }
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold mb-2;
+  }
+  h1 { @apply text-3xl; }
+  h2 { @apply text-2xl; }
+  h3 { @apply text-xl; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white font-bold py-2 px-4 rounded;
+  }
+  .btn-secondary {
+    @apply bg-[var(--secondary)] text-[var(--primary)] font-bold py-2 px-4 rounded;
+  }
 }
