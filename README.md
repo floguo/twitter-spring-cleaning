@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Twitter Spring Cleaning ヾ(^▽^*)))
 
-## Getting Started
+Hey there! Welcome to my little project that's all about tidying up your Twitter following list. It's like Marie Kondo, but for your Twitter feed! (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
 
-First, run the development server:
+## What's This All About? (・∀・)
 
-```bash
+- Log in with your Twitter account (don't worry, I won't peek!) (￣ー￣)ｂ
+- See who you're following (surprise yourself!) (ﾟДﾟ;)
+- Categorize accounts (put them in neat little boxes!) ┬┴┬┴┤(･_├┬┴┬┴
+- Mass unfollow (bye-bye, old tweets!) (ノ^_^)ノ
+- Get some cool stats (numbers are fun!) ┐(￣ヮ￣)┌
+
+## Before You Dive In (｡•̀ᴗ-)✧
+
+Make sure you've got:
+- Node.js (v14 or later) ᕦ(ò_óˇ)ᕤ
+- npm or yarn ⊂(・﹏・⊂)
+- A Twitter Developer account (fancy, right?) (⌐■_■)
+
+## Let's Get This Party Started! (ﾉ≧∀≦)ﾉ
+
+1. Clone this project:
+   ```
+   git clone https://github.com/floguo/twitter-spring-cleaning.git
+   cd twitter-spring-cleaning
+   ```
+
+2. Install the goodies:
+   ```
+   npm install
+   ```
+
+3. Create a `.env.local` file and add these magic spells:
+   ```
+   TWITTER_CLIENT_ID=your_super_secret_id
+   TWITTER_CLIENT_SECRET=your_even_more_secret_secret
+   NEXTAUTH_SECRET=make_up_something_fun
+   NEXTAUTH_URL=http://localhost:3000
+   ```
+
+## Blast Off! (っ•̀ω•́)っ✎⁾⁾
+
+To start this up:
+
+```
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then, zoom over to [http://localhost:3000](http://localhost:3000) and watch the magic happen! (ﾉ´ヮ`)ﾉ*: ･ﾟ
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where's What? ┬┴┬┴┤(･_├┬┴┬┴
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `src/app`: The heart of the operation (♥ω♥*)
+- `src/components`: Lego blocks, but for code ヽ(^o^)ノ
+- `src/lib`: Magic spells and potions (っ˘ڡ˘ς)
+- `src/types`: Keeping TypeScript happy ♪(´▽｀)
+- `src/styles`: Making things pretty (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
 
-## Learn More
+## Cool Stuff I'm Using ⊂(・▽・⊂)
 
-To learn more about Next.js, take a look at the following resources:
+- [Next.js](https://nextjs.org/) (Because it's next-level, get it? (￣ω￣))
+- [React](https://reactjs.org/) (For all the reactions ヽ(°〇°)ﾉ)
+- [TypeScript](https://www.typescriptlang.org/) (Keeping things tidy ┬┴┬┴┤(･_├┬┴┬┴)
+- [NextAuth.js](https://next-auth.js.org/) (For super-secret agent stuff ┬┴┬┴┤( ͡° ͜ʖ├┬┴┬┴)
+- [Tailwind CSS](https://tailwindcss.com/) (Making it look good without trying too hard (⌐■_■))
+- [shadcn/ui](https://ui.shadcn.com/) (For that extra pizzazz (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Legal Mumbo Jumbo (￣ー￣)ｂ
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is under the MIT License. Check out the `LICENSE` file for the boring details.
 
-## Deploy on Vercel
+## Wanna Chat? (´・ω・)っ由
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Find me on Twitter: [@floguo](https://x.com/floguo) (・∀・)
+Or check out the project: [https://github.com/floguo/twitter-spring-cleaning](https://github.com/floguo/twitter-spring-cleaning) ヾ(⌐■_■)ノ♪
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Now go forth and clean up that Twitter feed! ┌(★ｏ☆)┘
