@@ -1,14 +1,7 @@
-declare module "next-auth" {
-  interface Session {
-    accessToken?: string
-    refreshToken?: string
-  }
-}
-
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions } from "next-auth"
 import TwitterProvider from "next-auth/providers/twitter"
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     TwitterProvider({
       clientId: process.env.TWITTER_CLIENT_ID!,
@@ -30,9 +23,9 @@ const handler = NextAuth({
       return session
     },
   },
-  pages: {
-    signIn: '/auth/signin',
-  },
-})
+  secret: process.env.NEXTAUTH_SECRET,
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }

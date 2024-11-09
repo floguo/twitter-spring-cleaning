@@ -1,32 +1,55 @@
 'use client'
 
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useSession, signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
-import { TwitterFollowingList } from "@/components/TwitterFollowingList"
+import Dashboard from "@/components/Dashboard"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Twitter } from 'lucide-react'
+import { useState } from 'react'
 
 export default function Home() {
   const { data: session, status } = useSession()
+  const [error, setError] = useState<string | null>(null)
 
   if (status === "loading") {
-    return <div>Loading...</div>
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>
+  }
+
+  const handleSignIn = async () => {
+    try {
+      const result = await signIn('twitter', { callbackUrl: '/', redirect: false })
+      if (result?.error) {
+        setError(result.error)
+        console.error('Sign in error:', result.error)
+      }
+    } catch (error) {
+      setError('An unexpected error occurred')
+      console.error('Sign in error:', error)
+    }
   }
 
   if (!session) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-4xl font-bold mb-8">Twitter Spring Cleaning</h1>
-        <Button onClick={() => signIn('twitter')}>Sign in with Twitter</Button>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <Card className="w-[350px]">
+          <CardHeader>
+            <CardTitle>Twitter Spring Cleaning</CardTitle>
+            <CardDescription>Manage your Twitter following list</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button 
+              className="w-full"
+              onClick={handleSignIn}
+            >
+              <Twitter className="mr-2 h-4 w-4" />
+              Sign in with Twitter
+            </Button>
+            {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
+          </CardContent>
+        </Card>
       </div>
     )
   }
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">Twitter Spring Cleaning</h1>
-        <Button onClick={() => signOut()}>Sign out</Button>
-      </div>
-      <TwitterFollowingList />
-    </div>
-  )
+  return <Dashboard />
 }
