@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useSession } from 'next-auth/react'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -20,40 +21,59 @@ interface TwitterAccount {
 export function TwitterFollowingList() {
   const { data: session } = useSession()
   const [following, setFollowing] = useState<TwitterAccount[]>([])
-  const [selectedAccounts, setSelectedAccounts] = useState<string[]>([])
+  const [selectedAccounts, setSelectedAccounts] = useState<Set<string>>(new Set())
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    const fetchFollowing = async () => {
-      if (session?.accessToken) {
-        try {
-          const response = await fetch('/api/twitter/following')
-          if (!response.ok) {
-            throw new Error('Failed to fetch following')
-          }
-          const data = await response.json()
-          setFollowing(data)
-        } catch (error) {
-          console.error('Error fetching following:', error)
-        } finally {
-          setIsLoading(false)
+  const fetchFollowing = useCallback(async (cursor?: string) => {
+    if (session?.accessToken) {
+      try {
+        const response = await fetch(`/api/twitter/following${cursor ? `?cursor=${cursor}` : ''}`)
+        if (!response.ok) {
+          throw new Error('Failed to fetch following')
         }
+        const data = await response.json()
+        setFollowing(prev => [...prev, ...data.accounts])
+        if (data.next_cursor) {
+          await fetchFollowing(data.next_cursor)
+        }
+      } catch (error) {
+        console.error('Error fetching following:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
-    fetchFollowing()
   }, [session])
 
-  const handleAccountSelect = (id: string) => {
-    setSelectedAccounts(prev => 
-      prev.includes(id) ? prev.filter(accId => accId !== id) : [...prev, id]
-    )
-  }
+  useEffect(() => {
+    fetchFollowing()
+  }, [fetchFollowing])
+
+  const handleAccountSelect = useCallback((id: string) => {
+    setSelectedAccounts(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(id)) {
+        newSet.delete(id)
+      } else {
+        newSet.add(id)
+      }
+      return newSet
+    })
+  }, [])
 
   const handleBatchUnfollow = async () => {
     // TODO: Implement batch unfollow logic
-    console.log('Unfollowing:', selectedAccounts)
-    setSelectedAccounts([])
+    console.log('Unfollowing:', Array.from(selectedAccounts))
+    setSelectedAccounts(new Set())
   }
+
+  const parentRef = useRef<HTMLDivElement>(null)
+
+  const rowVirtualizer = useVirtualizer({
+    count: following.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 200,
+    overscan: 5,
+  })
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -61,38 +81,61 @@ export function TwitterFollowingList() {
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-        {following.map(account => (
-          <Card key={account.id}>
-            <CardHeader className="flex flex-row items-center gap-4">
-              <Avatar>
-                <AvatarImage src={account.profile_image_url} alt={account.name} />
-                <AvatarFallback>{account.name[0]}</AvatarFallback>
-              </Avatar>
-              <div>
-                <CardTitle>{account.name}</CardTitle>
-                <CardDescription>{account.username}</CardDescription>
+      <div ref={parentRef} style={{ height: '600px', overflow: 'auto' }}>
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
+        >
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+            const account = following[virtualRow.index]
+            return (
+              <div
+                key={account.id}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: `${virtualRow.size}px`,
+                  transform: `translateY(${virtualRow.start}px)`,
+                }}
+              >
+                <Card>
+                  <CardHeader className="flex flex-row items-center gap-4">
+                    <Avatar>
+                      <AvatarImage src={account.profile_image_url} alt={account.name} />
+                      <AvatarFallback>{account.name[0]}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <CardTitle>{account.name}</CardTitle>
+                      <CardDescription>{account.username}</CardDescription>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-gray-500 mb-2">{account.description}</p>
+                    <Badge>{account.category}</Badge>
+                  </CardContent>
+                  <CardFooter>
+                    <Checkbox 
+                      id={`select-${account.id}`}
+                      checked={selectedAccounts.has(account.id)}
+                      onCheckedChange={() => handleAccountSelect(account.id)}
+                    />
+                    <label htmlFor={`select-${account.id}`} className="ml-2 text-sm">
+                      Select for spring cleaning
+                    </label>
+                  </CardFooter>
+                </Card>
               </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-500 mb-2">{account.description}</p>
-              <Badge>{account.category}</Badge>
-            </CardContent>
-            <CardFooter>
-              <Checkbox 
-                id={`select-${account.id}`}
-                checked={selectedAccounts.includes(account.id)}
-                onCheckedChange={() => handleAccountSelect(account.id)}
-              />
-              <label htmlFor={`select-${account.id}`} className="ml-2 text-sm">
-                Select for spring cleaning
-              </label>
-            </CardFooter>
-          </Card>
-        ))}
+            )
+          })}
+        </div>
       </div>
-      <Button onClick={handleBatchUnfollow} disabled={selectedAccounts.length === 0}>
-        Unfollow Selected ({selectedAccounts.length})
+      <Button onClick={handleBatchUnfollow} disabled={selectedAccounts.size === 0}>
+        Unfollow Selected ({selectedAccounts.size})
       </Button>
     </div>
   )
