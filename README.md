@@ -1,6 +1,6 @@
 # Twitter Spring Cleaning ヾ(^▽^*)))
 
-Hey there! Welcome to my little project that's all about tidying up your Twitter following list. It's like Marie Kondo, but for your Twitter feed! (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
+Hey there! Welcome to my little project that helps you tidy up your Twitter following list. It's like Marie Kondo, but for your Twitter feed! (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
 
 ## What's This All About? (・∀・)
 
@@ -75,3 +75,5 @@ Find me on Twitter: [@floguo](https://x.com/floguo) (・∀・)
 Or check out the project: [https://github.com/floguo/twitter-spring-cleaning](https://github.com/floguo/twitter-spring-cleaning) ヾ(⌐■_■)ノ♪
 
 Now go forth and clean up that Twitter feed! ┌(★ｏ☆)┘
+
+-- Flo <3
